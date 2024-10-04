@@ -172,6 +172,11 @@ def splash():
                     unsafe_allow_html=True)
 
 
+import streamlit as st
+import numpy as np
+import joblib
+
+
 def test():
     st.markdown("""
     <style>
@@ -185,51 +190,64 @@ def test():
     <p class='custom-title'>Breast Cancer Prediction</p>
     """,
                 unsafe_allow_html=True)
-    radius_mean = st.slider('Radius Mean:',
-                            min_value=0.0,
-                            max_value=30.0,
-                            step=0.1)
-    texture_mean = st.slider('Texture Mean:',
-                             min_value=0.0,
-                             max_value=40.0,
-                             step=0.1)
-    smoothness_mean = st.slider('Smoothness Mean:',
+
+    # Create three columns
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        radius_mean = st.slider('Radius Mean:',
                                 min_value=0.0,
-                                max_value=0.2,
-                                step=0.01)
-    compactness_mean = st.slider('Compactness Mean:',
+                                max_value=30.0,
+                                step=0.1)
+        smoothness_mean = st.slider('Smoothness Mean:',
+                                    min_value=0.0,
+                                    max_value=0.2,
+                                    step=0.01)
+        radius_se = st.slider('Radius SE:',
+                              min_value=0.0,
+                              max_value=5.0,
+                              step=0.1)
+        smoothness_se = st.slider('Smoothness SE:',
+                                  min_value=0.0,
+                                  max_value=0.05,
+                                  step=0.001)
+
+    with col2:
+        texture_mean = st.slider('Texture Mean:',
                                  min_value=0.0,
-                                 max_value=0.2,
-                                 step=0.01)
-    symmetry_mean = st.slider('Symmetry Mean:',
-                              min_value=0.0,
-                              max_value=0.3,
-                              step=0.01)
-    fractal_dimension_mean = st.slider('Fractal Dimension Mean:',
-                                       min_value=0.0,
-                                       max_value=0.1,
-                                       step=0.001)
-    radius_se = st.slider('Radius SE:', min_value=0.0, max_value=5.0, step=0.1)
-    texture_se = st.slider('Texture SE:',
-                           min_value=0.0,
-                           max_value=10.0,
-                           step=0.1)
-    smoothness_se = st.slider('Smoothness SE:',
-                              min_value=0.0,
-                              max_value=0.05,
-                              step=0.001)
-    compactness_se = st.slider('Compactness SE:',
-                               min_value=0.0,
-                               max_value=0.05,
-                               step=0.001)
-    symmetry_se = st.slider('Symmetry SE:',
-                            min_value=0.0,
-                            max_value=0.05,
-                            step=0.001)
-    fractal_dimension_se = st.slider('Fractal Dimension SE:',
+                                 max_value=40.0,
+                                 step=0.1)
+        compactness_mean = st.slider('Compactness Mean:',
                                      min_value=0.0,
-                                     max_value=0.05,
-                                     step=0.001)
+                                     max_value=0.2,
+                                     step=0.01)
+        texture_se = st.slider('Texture SE:',
+                               min_value=0.0,
+                               max_value=10.0,
+                               step=0.1)
+        compactness_se = st.slider('Compactness SE:',
+                                   min_value=0.0,
+                                   max_value=0.05,
+                                   step=0.001)
+
+    with col3:
+        symmetry_mean = st.slider('Symmetry Mean:',
+                                  min_value=0.0,
+                                  max_value=0.3,
+                                  step=0.01)
+        fractal_dimension_mean = st.slider('Fractal Dimension Mean:',
+                                           min_value=0.0,
+                                           max_value=0.1,
+                                           step=0.001)
+        symmetry_se = st.slider('Symmetry SE:',
+                                min_value=0.0,
+                                max_value=0.05,
+                                step=0.001)
+        fractal_dimension_se = st.slider('Fractal Dimension SE:',
+                                         min_value=0.0,
+                                         max_value=0.05,
+                                         step=0.001)
+
     if st.button('Predict'):
         user_data = [
             radius_mean, texture_mean, smoothness_mean, compactness_mean,
@@ -241,15 +259,11 @@ def test():
         prediction = model.predict(user_data)
         if prediction[0] == 1:
             st.success('The model predicts the tumor is Malignant.')
-            # st.markdown('<h1 style="color: black;">The model predicts the tumor is Malignant. </h1>', unsafe_allow_html=True)
-
         else:
             st.success('The model predicts the tumor is Benign.')
-            # st.markdown('<h style="color: black;">The model predicts the tumor is Malignant. </h>', unsafe_allow_html=True)
+
     if st.button("Home"):
         navigate_to("Home")
-    # if st.button("Go to Blood Pressure"):
-    #     navigate_to("Blood Pressure")
 
 
 def home_2():
